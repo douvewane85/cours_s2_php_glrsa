@@ -24,29 +24,19 @@ public class App {
          switch (choix) {
             case 1:
                Categorie cat=CategorieView.saisieCategorie();
-               var result=CategorieService.addCategorie(cat);
-               if (result==true) {
+               CategorieService.addCategorie(cat);
+              
                     System.out.println("Categorie ajoutee avec success");
-               }else{
-                    System.out.println("Le tableau est rempli");
-               }
                break;
-      case 2:
+          case 2:
                 var categories=CategorieService.getAllCategorie();
                 CategorieView.afficheCategorie(categories);
-
+               break;
        case 3:
                 categories=CategorieService.getAllCategorie();
-                var nbreCat=CategorieService.getNombreCategorie();
-
-               var produit= ProduitView.saisieProduit(categories,nbreCat);
-
-               result=ProduitService.addProduit(produit);
-               if (result) {
-                    System.out.println("Produit ajoutee avec success");
-               }else{
-                    System.out.println("Le tableau est rempli");
-               }
+               var produit= ProduitView.saisieProduit(categories);
+               ProduitService.addProduit(produit);
+              
           break;
            case 4:
                 var produits=ProduitService.getProduits();
@@ -59,5 +49,7 @@ public class App {
          }
          
        }
+   
     }
+     
 }
