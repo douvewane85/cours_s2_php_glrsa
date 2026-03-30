@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.ArrayList;
+
 //Toute classe herite par defaut de la classe Object
 public class Categorie  {
     /*
@@ -8,28 +10,20 @@ public class Categorie  {
              attributs est un boolean ==>false
              attributs est un Objet ==>null
     */
-    private  static final int N=100;
     private int code ;
     private String nom;
 
     //OneToMany (1 Categorie ==> plusieurs Produits)
-     private Produit[] produits=new Produit[N];
-     private int nbreProduit;
+     private ArrayList<Produit> produits=new ArrayList<Produit>();
     
-    public int getNbreProduit() {
-        return nbreProduit;
-    }
+  
 
-    public Produit[] getProduits() {
+    public ArrayList<Produit> getProduits() {
         return produits;
     }
 
-    public boolean addProduit(Produit produit){
-       if (nbreProduit<N) {
-          produits[nbreProduit++]=produit;
-          return true;
-       }
-       return false;
+    public void addProduit(Produit produit){
+             produits.add(produit);  
     }
 
     public int getCode() {
@@ -64,6 +58,28 @@ public class Categorie  {
      @Override
      public String toString() {
         return "Categorie [code=" + code + ", nom=" + nom + "]";
+     }
+
+     @Override
+     public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + code;
+        return result;
+     }
+
+     @Override
+     public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Categorie other = (Categorie) obj;
+        if (code != other.code)
+            return false;
+        return true;
      }
 
     
