@@ -1,18 +1,40 @@
 package entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
-public class Employe {
+
+public class Employe extends User {
      private static int compteur = 1;
      private static    int ageRetraite = 60;
      
-      private int id;
-      private String nom;
-      private String prenom;
-      private String matricule;
-      private LocalDate dateEmbauche;
-      private LocalDate dateNaissance;
-      private double salaire;
+        private int id;
+        private String nom;
+        private String prenom;
+        private String matricule;
+        private LocalDate dateEmbauche;
+        private LocalDate dateNaissance;
+        private double salaire;
+
+        private ArrayList<Employe> subordonnes = new ArrayList<>();
+        public ArrayList<Employe> getSubordonnes() {
+            return subordonnes;
+        }
+        public void addSubordonne(Employe subordonne) {
+            if (subordonnes.isEmpty()) {
+                 super.setTypeUser(TypeUser.CHEF);
+            }
+            this.subordonnes.add(subordonne);
+            subordonne.setChef(this);
+        }
+
+        private Employe chef;
+        public Employe getChef() {
+            return chef;
+        }
+        public void setChef(Employe chef) {
+            this.chef = chef;
+        }
 
       private Departement departement;
         public Departement getDepartement() {
@@ -25,14 +47,17 @@ public class Employe {
       /*
          * Constructeur par défaut  
        */
-    public Employe() {
+       public Employe() {
+         super(TypeUser.EMPLOYESIMPLE);
+         this.id = compteur++;
       }
 
      /*
          * Constructeur surchargé 
          * Données Passees
      */
-    public Employe(String nom, String prenom, String matricule, LocalDate dateEmbauche, LocalDate dateNaissance, double salaire) {
+    public Employe(String nom, String prenom, String matricule, LocalDate dateEmbauche, LocalDate dateNaissance, double salaire, String login, String password) {
+        super(login, password, TypeUser.EMPLOYESIMPLE);
         this.id = compteur++;
         this.nom = nom;
         this.prenom = prenom;
@@ -47,6 +72,7 @@ public class Employe {
            Constructeur surchargé avec date d'embauche par défaut (date actuelle)
         */
         public Employe(String nom, String prenom, String matricule, LocalDate dateNaissance, double salaire) {
+        super(TypeUser.EMPLOYESIMPLE);
         this.id = compteur++;
         this.nom = nom;
         this.prenom = prenom;
@@ -130,7 +156,7 @@ public class Employe {
 
     @Override
     public String toString() {
-        return "Employe [nom=" + nom + ", prenom=" + prenom + ", matricule=" + matricule + ", dateEmbauche="
+        return "Employe [ "+super.toString()+" nom=" + nom + ", prenom=" + prenom + ", matricule=" + matricule + ", dateEmbauche="
                 + dateEmbauche + ", dateNaissance=" + dateNaissance + ", salaire=" + salaire + "]";
     }
 
