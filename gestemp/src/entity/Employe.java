@@ -1,22 +1,34 @@
 package entity;
 
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 public class Employe extends User {
-     private static int compteur = 1;
-     private static    int ageRetraite = 60;
-     
-        private int id;
-        private String nom;
-        private String prenom;
+       private static int compteur = 1;
+       private static    int ageRetraite = 60;
+    
         private String matricule;
         private LocalDate dateEmbauche;
         private LocalDate dateNaissance;
         private double salaire;
-
         private ArrayList<Employe> subordonnes = new ArrayList<>();
+        private Employe chef=null;
+
+        private ArrayList<Tache> taches = new ArrayList<>();
+        public ArrayList<Tache> getTaches() {
+            return taches;
+        }
+        public void addTache(Tache tache) {
+            //Tache --> Employe
+              this.taches.add(tache);
+              //Employe --> Tache
+              tache.setEmploye(this);
+        }
+
+
         public ArrayList<Employe> getSubordonnes() {
             return subordonnes;
         }
@@ -24,11 +36,13 @@ public class Employe extends User {
             if (subordonnes.isEmpty()) {
                  super.setTypeUser(TypeUser.CHEF);
             }
-            this.subordonnes.add(subordonne);
-            subordonne.setChef(this);
+             //Chef --> ES 
+             this.subordonnes.add(subordonne);
+             //ES -->Chef  
+             subordonne.setChef(this);
         }
 
-        private Employe chef;
+  
         public Employe getChef() {
             return chef;
         }
@@ -49,7 +63,7 @@ public class Employe extends User {
        */
        public Employe() {
          super(TypeUser.EMPLOYESIMPLE);
-         this.id = compteur++;
+         
       }
 
      /*
@@ -57,8 +71,7 @@ public class Employe extends User {
          * Données Passees
      */
     public Employe(String nom, String prenom, String matricule, LocalDate dateEmbauche, LocalDate dateNaissance, double salaire, String login, String password) {
-        super(login, password, TypeUser.EMPLOYESIMPLE);
-        this.id = compteur++;
+        super(nom, prenom, login, password, TypeUser.EMPLOYESIMPLE);
         this.nom = nom;
         this.prenom = prenom;
         this.matricule = matricule;
@@ -73,7 +86,7 @@ public class Employe extends User {
         */
         public Employe(String nom, String prenom, String matricule, LocalDate dateNaissance, double salaire) {
         super(TypeUser.EMPLOYESIMPLE);
-        this.id = compteur++;
+
         this.nom = nom;
         this.prenom = prenom;
         this.matricule = matricule;
@@ -98,30 +111,7 @@ public class Employe extends User {
         Employe.ageRetraite = ageRetraite;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
+   
     public String getMatricule() {
         return matricule;
     }
@@ -156,7 +146,7 @@ public class Employe extends User {
 
     @Override
     public String toString() {
-        return "Employe [ "+super.toString()+" nom=" + nom + ", prenom=" + prenom + ", matricule=" + matricule + ", dateEmbauche="
+        return "Employe [ "+super.toString()+", matricule=" + matricule + ", dateEmbauche="
                 + dateEmbauche + ", dateNaissance=" + dateNaissance + ", salaire=" + salaire + "]";
     }
 
@@ -198,5 +188,14 @@ public class Employe extends User {
      public int anneeRetraite() {
         return this.ageRetraite - calculerAge();
      }
+
+      public  Optional<Employe>  getEmployeByMatricule(String    matricule){
+       for (Employe employe : subordonnes) {
+                if (employe.getMatricule().equals(matricule)) {
+                    return Optional.of(employe);
+                }
+        }
+        return Optional.empty();
+    }
 
 }
